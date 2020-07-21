@@ -1,0 +1,2 @@
+Main-Class: crazyball.CBMain
+\n
