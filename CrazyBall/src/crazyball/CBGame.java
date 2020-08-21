@@ -83,49 +83,16 @@ public class CBGame extends JPanel implements Runnable{
 		nuisVert = new ArrayList<VertNuis>();
 		
 		startTime = System.nanoTime();
-		adjustColors(); rectSetup(); 
+		adjustColors();
+		rectSetup(rects1, 0); rectSetup(rects2, 1); 
+		rectSetup(rects3, 2); rectSetup(rects4, 3); rectSetup(rects5, 4);
 		run();
 	}
-	public void rectSetup(){
+	public void rectSetup(ArrayList<Rect> r, int st){
 		for(int i=0; i<5; i++){
-			rects1.add(new Rect(0, i, colors.get((int)(Math.random()*nofColors)))); 
-			rects2.add(new Rect(1, i, colors.get((int)(Math.random()*nofColors)))); 
-			rects3.add(new Rect(2, i, colors.get((int)(Math.random()*nofColors))));
-			rects4.add(new Rect(3, i, colors.get((int)(Math.random()*nofColors))));
-			rects5.add(new Rect(4, i, colors.get((int)(Math.random()*nofColors))));
+			r.add(new Rect(st, i, colors.get((int)(Math.random()*nofColors))));
 		}
-		for(int i=0; i<rects1.size(); i++){ //no same color rects next to each other
-			for(int j=0; j<rects2.size(); j++){
-				if((rects1.get(i).getLayer()==rects2.get(j).getLayer())){
-					while(rects1.get(i).getColor()==rects2.get(j).getColor()){
-						rects2.get(j).setColor(colors.get((int)(Math.random()*nofColors)));}
-				}
-			}
-		}
-		for(int i=0; i<rects2.size(); i++){
-			for(int j=0; j<rects3.size(); j++){
-				if((rects2.get(i).getLayer()==rects3.get(j).getLayer())){
-					while(rects2.get(i).getColor()==rects3.get(j).getColor()){
-						rects3.get(j).setColor(colors.get((int)(Math.random()*nofColors)));}
-				}
-			}
-		}
-		for(int i=0; i<rects3.size(); i++){
-			for(int j=0; j<rects4.size(); j++){
-				if((rects3.get(i).getLayer()==rects4.get(j).getLayer())){
-					while(rects3.get(i).getColor()==rects4.get(j).getColor()){
-						rects4.get(j).setColor(colors.get((int)(Math.random()*nofColors)));}
-				}
-			}
-		}
-		for(int i=0; i<rects4.size(); i++){
-			for(int j=0; j<rects5.size(); j++){
-				if((rects4.get(i).getLayer()==rects5.get(j).getLayer())){
-					while(rects4.get(i).getColor()==rects5.get(j).getColor()){
-						rects5.get(j).setColor(colors.get((int)(Math.random()*nofColors)));}
-				}
-			}
-		}
+		//try: no same color rects next to each other
 	}
 	public void run(){ 
 		protectBall(2);
@@ -171,7 +138,9 @@ public class CBGame extends JPanel implements Runnable{
 				}
 				if(drawPlus100||drawPlus500) { dy++; } else { dy=0; }
 				if(ball.getLives()==0){ gameOver(); }
-				contact(); compare(); collision();
+				contact(rects1, 1); contact(rects2, 2); contact(rects3, 3);
+				contact(rects4, 4); contact(rects5, 5);
+				compare(); collision();
 				repaint();
 			}
 		}); timer.start();
@@ -180,72 +149,25 @@ public class CBGame extends JPanel implements Runnable{
 		ses.scheduleAtFixedRate(taskRedBall, 10, 30, TimeUnit.SECONDS);
 		
 	}
-	public void contact(){
-		if(rects1.size()>0){
-		int s1 = rects1.size()-1;
-		if(ball.getStand()==1 && rects1.get(s1).getY()<=ball.getY()+ball.r*2){
-			Color c = rects1.get(s1).getColor();
-			if(c==colors.get(nofColors-1)){ rects1.get(s1).setColor(colors.get(0));}
-			else {rects1.get(s1).setColor(colors.get(colors.indexOf(c)+1));}
-		}}if(rects2.size()>0){
-		int s2 = rects2.size()-1;
-		if(ball.getStand()==2 && rects2.get(s2).getY()<=ball.getY()+ball.r*2){
-			Color c = rects2.get(s2).getColor();
-			if(c==colors.get(nofColors-1)){ rects2.get(s2).setColor(colors.get(0));}
-			else {rects2.get(s2).setColor(colors.get(colors.indexOf(c)+1));}
-		}}if(rects3.size()>0){
-		int s3 = rects3.size()-1; if(s3<0){s3=0;}
-		if(ball.getStand()==3 && rects3.get(s3).getY()<=ball.getY()+ball.r*2){
-			Color c = rects3.get(s3).getColor();
-			if(c==colors.get(nofColors-1)){ rects3.get(s3).setColor(colors.get(0));}
-			else {rects3.get(s3).setColor(colors.get(colors.indexOf(c)+1));}
-		}}if(rects4.size()>0){
-		int s4 = rects4.size()-1; if(s4<0){s4=0;}
-		if(ball.getStand()==4 && rects4.get(s4).getY()<=ball.getY()+ball.r*2){
-			Color c = rects4.get(s4).getColor();
-			if(c==colors.get(nofColors-1)){ rects4.get(s4).setColor(colors.get(0));}
-			else {rects4.get(s4).setColor(colors.get(colors.indexOf(c)+1));}
-		}}if(rects5.size()>0){
-		int s5 = rects5.size()-1; if(s5<0){s5=0;}
-		if(ball.getStand()==5 && rects5.get(s5).getY()<=ball.getY()+ball.r*2){
-			Color c = rects5.get(s5).getColor();
-			if(c==colors.get(nofColors-1)){ rects5.get(s5).setColor(colors.get(0));}
-			else {rects5.get(s5).setColor(colors.get(colors.indexOf(c)+1));}
+	public void contact(ArrayList<Rect> re, int st){ //careful! ball.r = <Rect> re
+		if(re.size()>0){
+		int s = re.size()-1;
+		if(ball.getStand()==st && re.get(s).getY()<=ball.getY()+ball.r*2){
+			Color c = re.get(s).getColor();
+			if(c==colors.get(nofColors-1)){ re.get(s).setColor(colors.get(0));}
+			else {re.get(s).setColor(colors.get(colors.indexOf(c)+1));}
 		}}
 		// redball - rect ->chg color
 		for(int i =0; i<nuisVert.size(); i++){
 			if(nuisVert.get(i).getType().equals("redBall")){ 
-				if(rects1.size()>0){
-					int s1 = rects1.size()-1; if(s1<0){s1=0;}
-					if(nuisVert.get(i).getStand()==1 && rects1.get(s1).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
-						Color c = rects1.get(s1).getColor();
-						if(c==colors.get(nofColors-1)){ rects1.get(s1).setColor(colors.get(0));}
-						else {rects1.get(s1).setColor(colors.get(colors.indexOf(c)+1));}
-					}}if(rects2.size()>0){
-					int s2 = rects2.size()-1; if(s2<0){s2=0;}
-					if(nuisVert.get(i).getStand()==2 && rects2.get(s2).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
-						Color c = rects2.get(s2).getColor();
-						if(c==colors.get(nofColors-1)){ rects2.get(s2).setColor(colors.get(0));}
-						else {rects2.get(s2).setColor(colors.get(colors.indexOf(c)+1));}
-					}}if(rects3.size()>0){
-					int s3 = rects3.size()-1; if(s3<0){s3=0;}
-					if(nuisVert.get(i).getStand()==3 && rects3.get(s3).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
-						Color c = rects3.get(s3).getColor();
-						if(c==colors.get(nofColors-1)){ rects3.get(s3).setColor(colors.get(0));}
-						else {rects3.get(s3).setColor(colors.get(colors.indexOf(c)+1));}
-					}}if(rects4.size()>0){
-					int s4 = rects4.size()-1; if(s4<0){s4=0;}
-					if(nuisVert.get(i).getStand()==4 && rects4.get(s4).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
-						Color c = rects4.get(s4).getColor();
-						if(c==colors.get(nofColors-1)){ rects4.get(s4).setColor(colors.get(0));}
-						else {rects4.get(s4).setColor(colors.get(colors.indexOf(c)+1));}
-					}}if(rects5.size()>0){
-					int s5 = rects5.size()-1; if(s5<0){s5=0;}
-					if(nuisVert.get(i).getStand()==5 && rects5.get(s5).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
-						Color c = rects5.get(s5).getColor();
-						if(c==colors.get(nofColors-1)){ rects5.get(s5).setColor(colors.get(0));}
-						else {rects5.get(s5).setColor(colors.get(colors.indexOf(c)+1));}
-					}}
+				if(re.size()>0){
+					int s = re.size()-1; if(s<0){s=0;}
+					if(nuisVert.get(i).getStand()==st && re.get(s).getY()<=nuisVert.get(i).getY()+nuisVert.get(i).getH()){
+							Color c = re.get(s).getColor();
+							if(c==colors.get(nofColors-1)) { re.get(s).setColor(colors.get(0)); }
+							else {re.get(s).setColor(colors.get(colors.indexOf(c)+1));}
+					}
+				}
 			}
 		}
 	}
